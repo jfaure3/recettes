@@ -92,7 +92,7 @@ function Recette({ liste, setListe, recette }) {
       </button>
 
       <button onClick={supprimer} className="input-champ">
-        Supprimer la recette
+        Supprimer cette recette
       </button>
     </form>
   );
