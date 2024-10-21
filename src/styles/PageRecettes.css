@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+}
+.formulaireRecette {
+  min-width: 50%;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Ombre portée plus prononcée au survol */
+}
+.liste {
+  color: black;
+  text-align: center;
+  padding: 10px;
+}
+
+.menu {
+  max-width: 33%;
+  text-wrap: wrap;
+}
+.liste li {
+  list-style: none;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Ombre portée */
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.liste li:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Ombre portée plus prononcée au survol */
+}
+
+.input-champ {
+  width: 100%; /* Rendre la largeur à 100% de son conteneur parent */
+  padding: 10px; /* Espacement interne pour rendre l'input et le textarea visuellement identiques */
+  box-sizing: border-box; /* Inclure le padding dans la largeur totale */
+  margin-bottom: 15px; /* Marges pour espacer les éléments */
+}
