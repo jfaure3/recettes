@@ -25,7 +25,9 @@ function Recette({ liste, setListe, recette }) {
   // Gestion de la soumission du formulaire
   const handleSubmit = (event) => {
     event.preventDefault(); // Empêche le rechargement de la page
-    if (titre !== "") {
+    const existeDeja = liste.some((r) => r.titre == titre);
+    if (existeDeja) alert("Cette recette existe déjà !");
+    if (titre !== "" && !existeDeja) {
       // Création de l'objet recette avec les données du formulaire
       const nouvelleRecette = { titre, ingredients, etapes, cuisson };
       // Sauvegarde de la nouvelle recette
