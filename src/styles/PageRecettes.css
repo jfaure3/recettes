@@ -40,3 +40,6 @@
   box-sizing: border-box; /* Inclure le padding dans la largeur totale */
   margin-bottom: 15px; /* Marges pour espacer les éléments */
 }
+textarea {
+  height: 10em;
+}
