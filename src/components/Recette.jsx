@@ -1,6 +1,13 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import Dexie from "dexie";
 import "../styles/PageRecettes.css";
+
+// Initialisez Dexie et créez la base de données
+const db = new Dexie("recettesDB");
+db.version(1).stores({
+  recettes: "titre", // Utilisez le titre comme clé primaire
+});
 
 function Recette({ liste, setListe, recette }) {
   useEffect(() => {
@@ -8,46 +15,52 @@ function Recette({ liste, setListe, recette }) {
     setIngredients(recette.ingredients);
     setEtapes(recette.etapes);
     setModeCuisson(recette.cuisson);
-  }, [recette]);
 
-  // Définir les states pour chaque champ du formulaire
+    // Charger les recettes depuis Dexie
+    (async () => {
+      const recettes = await db.recettes.toArray();
+      setListe(recettes);
+    })();
+  }, [recette, setListe]);
+
   const [titre, setTitre] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [etapes, setEtapes] = useState("");
   const [cuisson, setModeCuisson] = useState("");
 
-  // Gestion des changements dans chaque input
   const handleTitreChange = (event) => setTitre(event.target.value);
   const handleIngredientsChange = (event) => setIngredients(event.target.value);
   const handleEtapesChange = (event) => setEtapes(event.target.value);
   const handleCuissonChange = (event) => setModeCuisson(event.target.value);
 
-  // Gestion de la soumission du formulaire
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Empêche le rechargement de la page
-    const existeDeja = liste.some((r) => r.titre == titre);
-    if (existeDeja) alert("Cette recette existe déjà !");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const existeDeja = liste.some((r) => r.titre === titre);
+    if (existeDeja) {
+      alert("Cette recette existe déjà !");
+      return;
+    }
+
     if (titre !== "" && !existeDeja) {
-      // Création de l'objet recette avec les données du formulaire
       const nouvelleRecette = { titre, ingredients, etapes, cuisson };
-      // Sauvegarde de la nouvelle recette
-      const nouvelleListe = [...liste, nouvelleRecette];
-      setListe(nouvelleListe); //Asynchrone donc pas à jour la ligne d'après
-      localStorage.setItem("recettes", JSON.stringify(nouvelleListe));
+      await db.recettes.put(nouvelleRecette); // Ajout avec Dexie
+
+      const recettes = await db.recettes.toArray(); // Récupération des recettes
+      setListe(recettes);
     }
   };
-  const supprimer = () => {
-    const nouvelleListe = liste.filter(
-      (r) => r.titre.toLowerCase() !== titre.toLowerCase()
-    );
-    setListe(nouvelleListe); // attention : asynchrone
-    localStorage.setItem("recettes", JSON.stringify(nouvelleListe));
-    // Réinitialiser les champs du formulaire
+
+  const supprimer = async () => {
+    await db.recettes.delete(titre); // Suppression avec Dexie
+    const recettes = await db.recettes.toArray(); // Mise à jour de la liste
+    setListe(recettes);
+
     setTitre("");
     setIngredients("");
     setEtapes("");
     setModeCuisson("");
   };
+
   return (
     <form onSubmit={handleSubmit} className="formulaireRecette">
       <div>
@@ -93,7 +106,7 @@ function Recette({ liste, setListe, recette }) {
         Soumettre la recette
       </button>
 
-      <button onClick={supprimer} className="input-champ">
+      <button type="button" onClick={supprimer} className="input-champ">
         Supprimer cette recette
       </button>
     </form>
