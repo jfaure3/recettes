@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import Dexie from "dexie";
 import "../styles/PageRecettes.css";
+import Dexie from "dexie";
 
 // Initialisez Dexie et créez la base de données
 const db = new Dexie("recettesDB");
@@ -10,6 +10,11 @@ db.version(1).stores({
 });
 
 function Recette({ liste, setListe, recette }) {
+  const [titre, setTitre] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [etapes, setEtapes] = useState("");
+  const [cuisson, setModeCuisson] = useState("");
+
   useEffect(() => {
     setTitre(recette.titre);
     setIngredients(recette.ingredients);
@@ -22,11 +27,6 @@ function Recette({ liste, setListe, recette }) {
       setListe(recettes);
     })();
   }, [recette, setListe]);
-
-  const [titre, setTitre] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [etapes, setEtapes] = useState("");
-  const [cuisson, setModeCuisson] = useState("");
 
   const handleTitreChange = (event) => setTitre(event.target.value);
   const handleIngredientsChange = (event) => setIngredients(event.target.value);
